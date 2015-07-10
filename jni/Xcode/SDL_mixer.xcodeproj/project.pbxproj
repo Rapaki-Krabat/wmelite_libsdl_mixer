@@ -988,11 +988,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED)",
-					"$(HOME)/Library/Frameworks",
-					/Library/Frameworks,
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS_QUOTED)";
 				FRAMEWORK_SEARCH_PATHS_QUOTED = "\"$(SRCROOT)/Frameworks\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1006,11 +1002,7 @@
 					FLAC_MUSIC,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED)",
-					"$(HOME)/Library/Frameworks/SDL2.framework/Headers",
-					/Library/Frameworks/SDL2.framework/Headers,
-				);
+				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS_QUOTED)";
 				HEADER_SEARCH_PATHS_QUOTED = "\"$(SRCROOT)/Frameworks/modplug.framework/Headers\" \"$(SRCROOT)/Frameworks/Ogg.framework/Headers\" \"$(SRCROOT)/Frameworks/Vorbis.framework/Headers\" \"$(SRCROOT)/Frameworks/FLAC.framework/Headers\" \"$(SRCROOT)/Frameworks/smpeg2.framework/Headers\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = SDL2_mixer;
@@ -1024,11 +1016,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED)",
-					"$(HOME)/Library/Frameworks",
-					/Library/Frameworks,
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS_QUOTED)";
 				FRAMEWORK_SEARCH_PATHS_QUOTED = "\"$(SRCROOT)/Frameworks\"";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1042,11 +1030,7 @@
 					FLAC_MUSIC,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED)",
-					"$(HOME)/Library/Frameworks/SDL2.framework/Headers",
-					/Library/Frameworks/SDL2.framework/Headers,
-				);
+				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS_QUOTED)";
 				HEADER_SEARCH_PATHS_QUOTED = "\"$(SRCROOT)/Frameworks/modplug.framework/Headers\" \"$(SRCROOT)/Frameworks/Ogg.framework/Headers\" \"$(SRCROOT)/Frameworks/Vorbis.framework/Headers\" \"$(SRCROOT)/Frameworks/FLAC.framework/Headers\" \"$(SRCROOT)/Frameworks/smpeg2.framework/Headers\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = SDL2_mixer;
