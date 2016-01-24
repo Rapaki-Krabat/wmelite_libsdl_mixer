@@ -1,0 +1,228 @@
+# Configuration for iPhone OS, making static libs
+# this will generate both iPhone (arm) and iPhoneSimulator (i686) libs
+
+TARGET = SDL_mixer
+INCLUDE=-Itimidity -I./external/libmodplug-0.8.8.4/src -Iexternal/libvorbisidec-1.2.1 \
+-I. -I../../SDL/jni/include/ -Iexternal/libogg-1.3.1/include \
+-DWAV_MUSIC -DMODPLUG_MUSIC -D"MODPLUG_HEADER=<modplug.h>" -DMID_MUSIC \
+-DOGG_MUSIC -DOGG_USE_TREMOR -D"OGG_HEADER=<ivorbisfile.h>" -DHAVE_STDINT_H \
+-DHAVE_SETENV -DHAVE_SINF
+SRCS=\
+	./mixer.c \
+	./music_cmd.c \
+	./music_ogg.c \
+	./music.c \
+	./timidity/common.c \
+	./timidity/ctrlmode.c \
+	./timidity/filter.c \
+	./timidity/instrum.c \
+	./timidity/mix.c \
+	./timidity/output.c \
+	./timidity/playmidi.c \
+	./timidity/readmidi.c \
+	./timidity/resample.c \
+	./timidity/sdl_a.c \
+	./timidity/sdl_c.c \
+	./timidity/tables.c \
+	./timidity/timidity.c \
+	./wavestream.c \
+	./effect_position.c \
+	./effect_stereoreverse.c \
+	./effects_internal.c \
+	./load_aiff.c \
+	./load_voc.c \
+	./load_ogg.c \
+	./dynamic_mp3.c \
+	./dynamic_ogg.c \
+	./dynamic_flac.c \
+	./dynamic_mod.c \
+	./dynamic_fluidsynth.c \
+	./fluidsynth.c \
+	./music_modplug.c \
+	./external/libogg-1.3.1/src/bitwise.c \
+	./external/libogg-1.3.1/src/framing.c \
+	./external/libvorbisidec-1.2.1/block.c \
+	./external/libvorbisidec-1.2.1/codebook.c \
+	./external/libvorbisidec-1.2.1/floor0.c \
+	./external/libvorbisidec-1.2.1/floor1.c \
+	./external/libvorbisidec-1.2.1/info.c \
+	./external/libvorbisidec-1.2.1/mapping0.c \
+	./external/libvorbisidec-1.2.1/mdct.c \
+	./external/libvorbisidec-1.2.1/registry.c \
+	./external/libvorbisidec-1.2.1/res012.c \
+	./external/libvorbisidec-1.2.1/sharedbook.c \
+	./external/libvorbisidec-1.2.1/synthesis.c \
+	./external/libvorbisidec-1.2.1/vorbisfile.c \
+	./external/libvorbisidec-1.2.1/window.c \
+	./external/libmodplug-0.8.8.4/src/fastmix.cpp \
+	./external/libmodplug-0.8.8.4/src/load_669.cpp \
+	./external/libmodplug-0.8.8.4/src/load_abc.cpp \
+	./external/libmodplug-0.8.8.4/src/load_amf.cpp \
+	./external/libmodplug-0.8.8.4/src/load_ams.cpp \
+	./external/libmodplug-0.8.8.4/src/load_dbm.cpp \
+	./external/libmodplug-0.8.8.4/src/load_dmf.cpp \
+	./external/libmodplug-0.8.8.4/src/load_dsm.cpp \
+	./external/libmodplug-0.8.8.4/src/load_far.cpp \
+	./external/libmodplug-0.8.8.4/src/load_it.cpp \
+	./external/libmodplug-0.8.8.4/src/load_j2b.cpp \
+	./external/libmodplug-0.8.8.4/src/load_mdl.cpp \
+	./external/libmodplug-0.8.8.4/src/load_med.cpp \
+	./external/libmodplug-0.8.8.4/src/load_mid.cpp \
+	./external/libmodplug-0.8.8.4/src/load_mod.cpp \
+	./external/libmodplug-0.8.8.4/src/load_mt2.cpp \
+	./external/libmodplug-0.8.8.4/src/load_mtm.cpp \
+	./external/libmodplug-0.8.8.4/src/load_okt.cpp \
+	./external/libmodplug-0.8.8.4/src/load_pat.cpp \
+	./external/libmodplug-0.8.8.4/src/load_psm.cpp \
+	./external/libmodplug-0.8.8.4/src/load_ptm.cpp \
+	./external/libmodplug-0.8.8.4/src/load_s3m.cpp \
+	./external/libmodplug-0.8.8.4/src/load_stm.cpp \
+	./external/libmodplug-0.8.8.4/src/load_ult.cpp \
+	./external/libmodplug-0.8.8.4/src/load_umx.cpp \
+	./external/libmodplug-0.8.8.4/src/load_wav.cpp \
+	./external/libmodplug-0.8.8.4/src/load_xm.cpp \
+	./external/libmodplug-0.8.8.4/src/mmcmp.cpp \
+	./external/libmodplug-0.8.8.4/src/modplug.cpp \
+	./external/libmodplug-0.8.8.4/src/snd_dsp.cpp \
+	./external/libmodplug-0.8.8.4/src/snd_flt.cpp \
+	./external/libmodplug-0.8.8.4/src/snd_fx.cpp \
+	./external/libmodplug-0.8.8.4/src/sndfile.cpp \
+	./external/libmodplug-0.8.8.4/src/sndmix.cpp \
+	./dynamic_modplug.c \
+	./load_mp3.c
+
+ifeq ($(CUSTOM_PLATFORM_CONFIG),)
+PLATFORM_CONFIG=../../ios_platform_config.sh
+else
+PLATFORM_CONFIG=$(CUSTOM_PLATFORM_CONFIG)
+endif
+
+STD_CFLAGS_PHONE = `$(PLATFORM_CONFIG) --cflags`
+STD_CXXFLAGS_PHONE = `$(PLATFORM_CONFIG) --cxxflags`
+STD_CFLAGS_SIM = `$(PLATFORM_CONFIG) --cflags_sim`
+STD_CXXFLAGS_SIM = `$(PLATFORM_CONFIG) --cxxflags_sim`
+
+IPHONEOS_DEPLOYMENT_TARGET = `$(PLATFORM_CONFIG) --minversion`
+IPHONESIM_DEPLOYMENT_TARGET = `$(PLATFORM_CONFIG) --minversion`
+
+ARCH_SIM_I386 = i386
+ARCH_SIM_X86_64 = x86_64
+ARCH_PHONE_ARMV7 = armv7
+ARCH_PHONE_ARMV7S = armv7s
+ARCH_PHONE_ARM64 = arm64
+
+SDKROOT_SIM = `$(PLATFORM_CONFIG) --sysroot-sim`
+SDKROOT_PHONE = `$(PLATFORM_CONFIG) --sysroot-phone`
+
+EXTRA_CFLAGS_SIM   += $(INCLUDE)
+EXTRA_CFLAGS_PHONE += $(INCLUDE)
+SRCS_TO_COMPILE=$(SRCS)
+
+EXTRA_CFLAGS_SIM += -isysroot $(SDKROOT_SIM)
+EXTRA_CFLAGS_SIM += -mios-simulator-version-min=$(IPHONESIM_DEPLOYMENT_TARGET)
+
+EXTRA_CFLAGS_PHONE += -isysroot $(SDKROOT_PHONE)
+EXTRA_CFLAGS_PHONE += -miphoneos-version-min=$(IPHONEOS_DEPLOYMENT_TARGET)
+
+AR_SIM = `$(PLATFORM_CONFIG) --ar`
+AR_PHONE = `$(PLATFORM_CONFIG) --ar`
+
+CC_SIM = `$(PLATFORM_CONFIG) --cc`
+CXX_SIM = `$(PLATFORM_CONFIG) --cxx`
+LIBTOOL_SIM = `$(PLATFORM_CONFIG) --libtool`
+CC_PHONE = `$(PLATFORM_CONFIG) --cc`
+CXX_PHONE = `$(PLATFORM_CONFIG) --cxx`
+LIBTOOL_PHONE = `$(PLATFORM_CONFIG) --libtool`
+LIPO = `$(PLATFORM_CONFIG) --lipo`
+
+CFLAGS_SIM = $(STD_CFLAGS_SIM) $(EXTRA_CFLAGS_SIM)
+CXXFLAGS_SIM += $(STD_CXXFLAGS_SIM) $(EXTRA_CFLAGS_SIM)
+
+CFLAGS_PHONE = $(STD_CFLAGS_PHONE) $(EXTRA_CFLAGS_PHONE)
+CXXFLAGS_PHONE += $(STD_CXXFLAGS_PHONE) $(EXTRA_CFLAGS_PHONE)
+
+STATICLIB_SIM = lib$(TARGET)-iphonesimulator.a
+STATICLIB_PHONE = lib$(TARGET)-iphone.a
+
+.SUFFIXES: .o-i386 .o-x86_64 .o-armv7 .o-armv7s .o-arm64
+MODULES_ARMV7 =  $(SRCS_TO_COMPILE:.c=.o-armv7)
+MODULES_ARMV7 := $(MODULES_ARMV7:.cpp=.o-armv7)
+MODULES_ARMV7S =  $(SRCS_TO_COMPILE:.c=.o-armv7s)
+MODULES_ARMV7S := $(MODULES_ARMV7S:.cpp=.o-armv7s)
+MODULES_ARM64 =  $(SRCS_TO_COMPILE:.c=.o-arm64)
+MODULES_ARM64 := $(MODULES_ARM64:.cpp=.o-arm64)
+MODULES_i386 = $(SRCS_TO_COMPILE:.c=.o-i386)
+MODULES_i386 := $(MODULES_i386:.cpp=.o-i386)
+MODULES_x86_64 = $(SRCS_TO_COMPILE:.c=.o-x86_64)
+MODULES_x86_64 := $(MODULES_x86_64:.cpp=.o-x86_64)
+
+default: all
+
+all: $(TARGET)
+
+$(TARGET): $(STATICLIB_SIM) $(STATICLIB_PHONE)
+
+$(STATICLIB_SIM): $(STATICLIB_SIM)-i386 $(STATICLIB_SIM)-x86_64
+	$(LIPO) -create $(STATICLIB_SIM)-i386 $(STATICLIB_SIM)-x86_64 -output $(STATICLIB_SIM)
+
+$(STATICLIB_SIM)-i386: $(MODULES_i386)
+	$(LIBTOOL_SIM) -arch_only $(ARCH_SIM_I386) -o $@ $(MODULES_i386)
+
+$(STATICLIB_SIM)-x86_64: $(MODULES_x86_64)
+	$(LIBTOOL_SIM) -arch_only $(ARCH_SIM_X86_64) -o $@ $(MODULES_x86_64)
+
+.c.o-i386:
+	@echo " (CC-i386) $<"
+	@$(CC_SIM) -arch $(ARCH_SIM_I386) $(CFLAGS_SIM) -c $< -o $@
+
+.cpp.o-i386:
+	@echo " (C++-i386) $<"
+	@$(CXX_SIM) -arch $(ARCH_SIM_I386) $(CXXFLAGS_SIM) -c $< -o $@
+
+.c.o-x86_64:
+	@echo " (CC-x86_64) $<"
+	@$(CC_SIM) -arch $(ARCH_SIM_X86_64) $(CFLAGS_SIM) -c $< -o $@
+
+.cpp.o-x86_64:
+	@echo " (C++-x86_64) $<"
+	@$(CXX_SIM) -arch $(ARCH_SIM_X86_64) $(CXXFLAGS_SIM) -c $< -o $@
+
+$(STATICLIB_PHONE): $(STATICLIB_PHONE)-armv7 $(STATICLIB_PHONE)-armv7s $(STATICLIB_PHONE)-arm64
+	$(LIPO) -create $(STATICLIB_PHONE)-armv7 $(STATICLIB_PHONE)-armv7s $(STATICLIB_PHONE)-arm64 -output $(STATICLIB_PHONE)
+
+$(STATICLIB_PHONE)-armv7: $(MODULES_ARMV7)
+	$(LIBTOOL_PHONE) -arch_only $(ARCH_PHONE_ARMV7) -o $@ $(MODULES_ARMV7)
+
+$(STATICLIB_PHONE)-armv7s: $(MODULES_ARMV7S)
+	$(LIBTOOL_PHONE) -arch_only $(ARCH_PHONE_ARMV7S) -o $@ $(MODULES_ARMV7S)
+
+$(STATICLIB_PHONE)-arm64: $(MODULES_ARM64)
+	$(LIBTOOL_PHONE) -arch_only $(ARCH_PHONE_ARM64) -o $@ $(MODULES_ARM64)
+
+.c.o-armv7:
+	@echo " (CC-armv7) $<"
+	@$(CC_PHONE) -arch $(ARCH_PHONE_ARMV7) $(CFLAGS_PHONE) -c $< -o $@
+
+.cpp.o-armv7:
+	@echo " (C++-armv7) $<"
+	@$(CXX_PHONE) -arch $(ARCH_PHONE_ARMV7) $(CXXFLAGS_PHONE) -c $< -o $@
+
+.c.o-armv7s:
+	@echo " (CC-armv7s) $<"
+	@$(CC_PHONE) -arch $(ARCH_PHONE_ARMV7S) $(CFLAGS_PHONE) -c $< -o $@
+
+.cpp.o-armv7s:
+	@echo " (C++-armv7s) $<"
+	@$(CXX_PHONE) -arch $(ARCH_PHONE_ARMV7S) $(CXXFLAGS_PHONE) -c $< -o $@
+
+.c.o-arm64:
+	@echo " (CC-arm64) $<"
+	@$(CC_PHONE) -arch $(ARCH_PHONE_ARM64) $(CFLAGS_PHONE) -c $< -o $@
+
+.cpp.o-arm64:
+	@echo " (C++-arm64) $<"
+	@$(CXX_PHONE) -arch $(ARCH_PHONE_ARM64) $(CXXFLAGS_PHONE) -c $< -o $@
+
+clean:
+	rm -f core Dist/*.* u2dtmp* $(MODULES_i386) $(MODULES_x86_64) $(MODULES_ARMV7) $(MODULES_ARMV7S) $(MODULES_ARM64) $(STATICLIB_SIM) $(STATICLIB_PHONE) $(STATICLIB_SIM)-i386 $(STATICLIB_SIM)-x86_64 $(STATICLIB_PHONE)-armv7 $(STATICLIB_PHONE)-armv7s $(STATICLIB_PHONE)-arm64
+
