@@ -92,6 +92,11 @@ SRCS=\
 	./dynamic_modplug.c \
 	./load_mp3.c
 
+INSTALLDIR_HEADERS=libSDL_mixer/include/
+INSTALLDIR_LIBRARY=libSDL_mixer/libcombined/
+INSTALLDIR=`$(PLATFORM_CONFIG) --installdir`
+INSTALL_HEADERS=SDL_mixer.h
+
 ifeq ($(CUSTOM_PLATFORM_CONFIG),)
 PLATFORM_CONFIG=../../ios_platform_config.sh
 else
@@ -142,6 +147,7 @@ CXXFLAGS_SIM += $(STD_CXXFLAGS_SIM) $(EXTRA_CFLAGS_SIM)
 CFLAGS_PHONE = $(STD_CFLAGS_PHONE) $(EXTRA_CFLAGS_PHONE)
 CXXFLAGS_PHONE += $(STD_CXXFLAGS_PHONE) $(EXTRA_CFLAGS_PHONE)
 
+STATICLIB = lib$(TARGET).a
 STATICLIB_SIM = lib$(TARGET)-iphonesimulator.a
 STATICLIB_PHONE = lib$(TARGET)-iphone.a
 
@@ -224,6 +230,16 @@ $(STATICLIB_PHONE)-arm64: $(MODULES_ARM64)
 	@echo " (C++-arm64) $<"
 	@$(CXX_PHONE) -arch $(ARCH_PHONE_ARM64) $(CXXFLAGS_PHONE) -c $< -o $@
 
+combine_libs:
+	$(LIPO) -create `ls -1 $(STATICLIB_PHONE) 2>/dev/null || /bin/true` `ls -1 $(STATICLIB_SIM) 2>/dev/null || /bin/true` -output $(STATICLIB)
+	$(LIPO) -info $(STATICLIB)
+	
+install: combine_libs
+	mkdir -p $(INSTALLDIR)/$(INSTALLDIR_HEADERS)
+	mkdir -p $(INSTALLDIR)/$(INSTALLDIR_LIBRARY)
+	cp $(INSTALL_HEADERS) $(INSTALLDIR)/$(INSTALLDIR_HEADERS)
+	cp $(STATICLIB) $(INSTALLDIR)/$(INSTALLDIR_LIBRARY)
+	
 clean:
 	rm -f core Dist/*.* u2dtmp* $(MODULES_i386) $(MODULES_x86_64) $(MODULES_ARMV7) $(MODULES_ARMV7S) $(MODULES_ARM64) $(STATICLIB_SIM) $(STATICLIB_PHONE) $(STATICLIB_SIM)-i386 $(STATICLIB_SIM)-x86_64 $(STATICLIB_PHONE)-armv7 $(STATICLIB_PHONE)-armv7s $(STATICLIB_PHONE)-arm64
 
