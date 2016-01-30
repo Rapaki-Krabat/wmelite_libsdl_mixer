@@ -1,7 +1,7 @@
 # Configuration for iPhone OS, making static libs
 # this will generate both iPhone (arm) and iPhoneSimulator (i686) libs
 
-TARGET = SDL_mixer
+TARGET = SDL2_mixer
 INCLUDE=-Itimidity -I./external/libmodplug-0.8.8.4/src -Iexternal/libvorbisidec-1.2.1 \
 -I./external/libmodplug-0.8.8.4/src/libmodplug/ \
 -I. -I../../SDL/jni/include/ -Iexternal/libogg-1.3.1/include \
@@ -92,8 +92,8 @@ SRCS=\
 	./dynamic_modplug.c \
 	./load_mp3.c
 
-INSTALLDIR_HEADERS=libSDL_mixer/include/
-INSTALLDIR_LIBRARY=libSDL_mixer/libcombined/
+INSTALLDIR_HEADERS=libSDL2_mixer/include/
+INSTALLDIR_LIBRARY=libSDL2_mixer/libcombined/
 INSTALLDIR=`$(PLATFORM_CONFIG) --installdir`
 INSTALL_HEADERS=SDL_mixer.h
 
