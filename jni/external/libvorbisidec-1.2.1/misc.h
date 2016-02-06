@@ -30,8 +30,10 @@
 
 #include "asm_arm.h"
 #include <stdlib.h> /* for abs() */
+#ifndef __MINGW32__
 #include <endian.h>
-  
+#endif  
+
 #ifndef _V_WIDE_MATH
 #define _V_WIDE_MATH
   
