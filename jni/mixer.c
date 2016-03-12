@@ -455,7 +455,7 @@ static void do_mix_channel(void* udata, Uint8 *stream, int len, _Mix_Channel* ch
 		_Mix_channel_done_playing(i);
 	} else if ( channel->fading != MIX_NO_FADING ) {
 		Uint32 ticks = sdl_ticks - sound->ticks_fade;
-		if( ticks > sound->fade_length ) {
+		if( ticks >= sound->fade_length ) {
 		    Mix_Volume(i, channel->fade_volume_reset); /* Restore the volume */
 			if( channel->fading == MIX_FADING_OUT ) {
 				channel->playing = 0;
