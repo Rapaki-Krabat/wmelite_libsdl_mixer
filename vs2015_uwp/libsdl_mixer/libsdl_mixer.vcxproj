@@ -60,6 +60,11 @@
     <ClCompile Include="..\..\jni\music_ogg.c" />
     <ClCompile Include="..\..\jni\wavestream.c" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\SDL\VisualC-WinRT\UWP_VS2015\SDL-UWP.vcxproj">
+      <Project>{89e9b32e-a86a-47c3-a948-d2b1622925ce}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{770a54e9-1167-4543-9ee5-111327faa62d}</ProjectGuid>
     <Keyword>DynamicLibrary</Keyword>
