@@ -30,7 +30,7 @@
 
 #include "asm_arm.h"
 #include <stdlib.h> /* for abs() */
-#if !defined(__MINGW32__) && !defined(WINDOWS_SKIP_ENDIAN_H)
+#if !defined(__MINGW32__) && !defined(WINDOWS_SKIP_ENDIAN_H) && !defined(__MACOSX__)
 #include <endian.h>
 #endif  
 
