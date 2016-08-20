@@ -1173,7 +1173,7 @@ int Mix_SetLoops(int which, int loops)
 {
     int old_loops;
 
-    if ((which >= 0) && (which < num_channels)) {
+    if ((which < 0) || (which >= num_channels)) {
         Mix_SetError("Invalid channel specified");
         return(-1);
     }
@@ -1196,7 +1196,7 @@ int Mix_SetLoopStart(int which, int loop_start)
     int old_loop_start;
     int position;
 
-    if ((which >= 0) && (which < num_channels)) {
+    if ((which < 0) || (which >= num_channels)) {
         Mix_SetError("Invalid channel specified");
         return(-1);
     }
@@ -1226,7 +1226,7 @@ int Mix_SetPlayPosition(int which, int position)
     int old_position;
     int new_position;
 
-    if ((which >= 0) && (which < num_channels)) {
+    if ((which < 0) || (which >= num_channels)) {
         Mix_SetError("Invalid channel specified");
         return(-1);
     }
