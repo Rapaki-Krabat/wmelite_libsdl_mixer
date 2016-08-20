@@ -46,7 +46,7 @@ typedef struct {
 #else
     int (*ov_time_seek)(OggVorbis_File *vf,double pos);
 #endif
-	double (*ov_time_tell)(OggVorbis_File *vf);
+	ogg_int64_t (*ov_time_tell)(OggVorbis_File *vf);
 } vorbis_loader;
 
 extern vorbis_loader vorbis;

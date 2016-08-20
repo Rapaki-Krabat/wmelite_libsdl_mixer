@@ -243,7 +243,7 @@ void OGG_jump_to_time(OGG_music *music, double time)
 
 double OGG_get_time(OGG_music *music)
 {
-	return vorbis.ov_time_tell(&music->vf);
+	return ((double) vorbis.ov_time_tell(&music->vf)) / 1000.0f;
 }
 
 #endif /* OGG_MUSIC */

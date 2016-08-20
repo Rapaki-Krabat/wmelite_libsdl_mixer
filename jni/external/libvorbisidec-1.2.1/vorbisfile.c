@@ -1744,21 +1744,34 @@ ogg_int64_t ov_time_tell(OggVorbis_File *vf){
   int link=0;
   ogg_int64_t pcm_total=0;
   ogg_int64_t time_total=0;
+  ogg_int64_t retval;
 
   if(vf->ready_state<OPENED)return(OV_EINVAL);
   if(vf->seekable){
     pcm_total=ov_pcm_total(vf,-1);
     time_total=ov_time_total(vf,-1);
 
-    /* which bitstream section does this time offset occur in? */
-    for(link=vf->links-1;link>=0;link--){
-      pcm_total-=vf->pcmlengths[link*2+1];
-      time_total-=ov_time_total(vf,link);
-      if(vf->pcm_offset>=pcm_total)break;
-    }
+	if (vf->links == 1)
+	{
+		/* one bitstream only, simple computation */
+		retval = (1000 * vf->pcm_offset) / vf->vi[link].rate;
+	}
+	else
+	{
+		/* which bitstream section does this time offset occur in? */
+		for (link = vf->links - 1;link >= 0;link--) {
+			pcm_total -= vf->pcmlengths[link * 2 + 1];
+			time_total -= ov_time_total(vf, link);
+			if (vf->pcm_offset >= pcm_total)break;
+		}
+
+		retval = (time_total + (1000 * vf->pcm_offset - pcm_total) / vf->vi[link].rate);
+	}
   }
 
-  return(time_total+(1000*vf->pcm_offset-pcm_total)/vf->vi[link].rate);
+  // SDL_Log("Music position=%d ms!\n", retval);
+
+  return retval;
 }
 
 /*  link:   -1) return the vorbis_info struct for the bitstream section
