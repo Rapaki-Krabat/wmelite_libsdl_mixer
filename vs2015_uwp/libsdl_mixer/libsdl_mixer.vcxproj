@@ -61,7 +61,7 @@
     <ClCompile Include="..\..\jni\wavestream.c" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\SDL_WinRT\VisualC-WinRT\UWP_VS2015\SDL-UWP.vcxproj">
+    <ProjectReference Include="..\..\..\SDL_merged\VisualC-WinRT\UWP_VS2015\SDL-UWP.vcxproj">
       <Project>{89e9b32e-a86a-47c3-a948-d2b1622925ce}</Project>
     </ProjectReference>
   </ItemGroup>
