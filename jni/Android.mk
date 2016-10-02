@@ -4,9 +4,9 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := SDL2
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a-hard)
-LOCAL_SRC_FILES := ../../SDL/libs/armeabi-v7a/libSDL2.so
+LOCAL_SRC_FILES := ../../SDL_merged/libs/armeabi-v7a/libSDL2.so
 else
-LOCAL_SRC_FILES := ../../SDL/libs/$(TARGET_ARCH_ABI)/libSDL2.so
+LOCAL_SRC_FILES := ../../SDL_merged/libs/$(TARGET_ARCH_ABI)/libSDL2.so
 endif
 
 include $(PREBUILT_SHARED_LIBRARY)
@@ -46,7 +46,7 @@ LOCAL_LDLIBS :=
 LOCAL_STATIC_LIBRARIES :=
 LOCAL_SHARED_LIBRARIES := SDL2
 
-LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../SDL/jni/include/
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../SDL_merged/include/
 
 LOCAL_ARM_MODE := arm
 
