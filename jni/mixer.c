@@ -704,6 +704,11 @@ int Mix_AllocateChannels(int numchans)
 		}
 	}
 	num_channels = numchans;
+
+	// realloc() can return a different ptr than initial alloc()
+	// so update our reference to the array start
+	mix_music_compat_channel = mix_channel[0];
+
     SDL_UnlockAudio();
     return(num_channels);
 }
