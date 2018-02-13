@@ -33,6 +33,8 @@
 #include "music.h"
 #include "mixer.h"
 
+#define USE_MIXER_FUNCTIONS_INSTEAD_OF_CHANNEL_PTR
+
 #ifdef CMD_MUSIC
 #include "music_cmd.h"
 #endif
@@ -119,7 +121,11 @@ struct _Mix_Music {
         FLAC_music *flac;
 #endif
     } data;
-	_Mix_Channel* channel;
+#ifdef USE_MIXER_FUNCTIONS_INSTEAD_OF_CHANNEL_PTR
+    int mix_channel;
+#else
+    _Mix_Channel* channel;
+#endif
     Mix_Fading fading;
     int fade_step;
     int fade_steps;
@@ -233,13 +239,21 @@ static int music_halt_or_loop (Mix_Music * music_playing, int channel)
 #endif
 
 		/* Restart music if it has to loop at a high level */
+#ifdef USE_MIXER_FUNCTIONS_INSTEAD_OF_CHANNEL_PTR
+		if (_MusicMixerChannel_IsLooping(music_playing->mix_channel) == SDL_TRUE)
+#else
 		if (music_playing->channel && music_playing->channel->music_looping != 0)
+#endif
 		{
 			Mix_Fading current_fade;
 			/* Count the loop only if it's not looping forever. */
+#ifdef USE_MIXER_FUNCTIONS_INSTEAD_OF_CHANNEL_PTR
+			_MusicMixerChannel_DecreaseLoops(music_playing->mix_channel);
+#else
 			if (music_playing->channel->music_looping != -1) {
 				--music_playing->channel->music_looping;
 			}
+#endif
 			current_fade = music_playing->fading;
 			music_internal_play(music_playing, music_playing->loop_start, channel);
 			music_playing->fading = current_fade;
@@ -1040,7 +1054,12 @@ skip:
         }
     }
 
+#ifdef USE_MIXER_FUNCTIONS_INSTEAD_OF_CHANNEL_PTR
+    _StartMusic(channel, music->fading == MIX_FADING_IN, music);
+    music->mix_channel = channel;
+#else
 	music->channel = _StartMusic(channel, music->fading == MIX_FADING_IN, music);
+#endif
 
     return(retval);
 }
@@ -1109,9 +1128,13 @@ int Mix_FadeInMusicPosCh(Mix_Music *music, int loops, int ms, int channel, doubl
 	}
 	music->loop_start = 0.0; // looping at offset needs to be set by special function later
 	retval = music_internal_play(music, position, channel_to_use);
+#ifdef USE_MIXER_FUNCTIONS_INSTEAD_OF_CHANNEL_PTR
+	_MusicMixerChannel_SetLoops(music->mix_channel, loops);
+#else
 	if (music->channel) {
 		music->channel->music_looping = loops;
 	}
+#endif
 	SDL_UnlockAudio();
 
 	if ((retval == 0) && (channel == -1)) {
@@ -1148,7 +1171,11 @@ int Mix_SetMusicLoops(Mix_Music *music, int channel, int loops)
 
     SDL_LockAudio();
 	
-	music->channel->music_looping = loops;
+#ifdef USE_MIXER_FUNCTIONS_INSTEAD_OF_CHANNEL_PTR
+	_MusicMixerChannel_SetLoops(music->mix_channel, loops);
+#else
+ 	music->channel->music_looping = loops;
+#endif
 
     SDL_UnlockAudio();
 
@@ -1364,6 +1391,7 @@ static void music_internal_volume(Mix_Music *music_playing, int volume)
         }
 #endif
 #ifdef USE_TIMIDITY_MIDI
+
         if ( timidity_ok ) {
             Timidity_SetVolume(volume);
             return;
@@ -1504,7 +1532,11 @@ static void music_internal_halt(Mix_Music * music_playing)
 
 skip:
     music_playing->fading = MIX_NO_FADING;
-	music_playing->channel = NULL;
+#ifdef USE_MIXER_FUNCTIONS_INSTEAD_OF_CHANNEL_PTR
+    music_playing->mix_channel = -3;
+#else
+    music_playing->channel = NULL;
+#endif
 }
 int Mix_HaltMusicCh(Mix_Music *music)
 {
@@ -1753,8 +1785,14 @@ int Mix_PlayingMusicCh(int channel)
 		music_playing = _ChannelPlayingMusic(channel);
 	}
 	if ( music_playing ) {
+#ifdef USE_MIXER_FUNCTIONS_INSTEAD_OF_CHANNEL_PTR
+		playing = (_MusicMixerChannel_IsLooping(music_playing->mix_channel) == SDL_TRUE)
+		          || music_internal_playing(music_playing);
+
+#else
 		playing = (music_playing->channel && music_playing->channel->music_looping)
 		          || music_internal_playing(music_playing);
+#endif
 	}
 	SDL_UnlockAudio();
 

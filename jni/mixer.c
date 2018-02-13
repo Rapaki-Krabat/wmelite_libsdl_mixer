@@ -593,6 +593,7 @@ void _Mix_InitChannel(int i)
 	sound->chunk = NULL;
 	mix_channel[i].playing = 0;
 	mix_channel[i].looping = 0;
+	mix_channel[i].music_looping = 0;
 	mix_channel[i].loop_start = 0;
 	mix_channel[i].volume = SDL_MIX_MAXVOLUME;
 	sound->fade_volume = SDL_MIX_MAXVOLUME;
@@ -1822,6 +1823,56 @@ int Mix_UnregisterAllEffects(int channel)
     retval = _Mix_UnregisterAllEffects_locked(channel);
     SDL_UnlockAudio();
     return(retval);
+}
+
+// added to remove the music->channel ptr
+
+/**
+ * Safe to call with an invalid channel number, simply returns false.
+ *
+ */
+SDL_bool _MusicMixerChannel_IsLooping(int channel)
+{
+    if ((channel < 0) || (channel > num_channels))
+    {
+        return(SDL_FALSE);
+    }
+
+    if (mix_channel[channel].music_looping != 0)
+    {
+    	return SDL_TRUE;
+    }
+
+    return SDL_FALSE;
+}
+
+/**
+ * Must be called within SDL_LockAudio()!
+ */
+void     _MusicMixerChannel_SetLoops(int channel, int loops)
+{
+    if ((channel < 0) || (channel > num_channels))
+    {
+        return;
+    }
+
+    mix_channel[channel].music_looping = loops;
+}
+
+/**
+ * Must be called within SDL_LockAudio()!
+ */
+void     _MusicMixerChannel_DecreaseLoops(int channel)
+{
+    if ((channel < 0) || (channel > num_channels))
+    {
+        return;
+    }
+
+    if (mix_channel[channel].music_looping != -1)
+    {
+    	--mix_channel[channel].music_looping;
+    }
 }
 
 /* end of mixer.c ... */

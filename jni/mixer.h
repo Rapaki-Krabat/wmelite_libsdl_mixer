@@ -49,4 +49,9 @@ void _HaltAllMusic(void);
 _Mix_Channel *_StartMusic(int channel, int is_fading, Mix_Music* music);
 void _ClearMusic(Mix_Music * song);
 
+// added to remove the music->channel ptr
+SDL_bool _MusicMixerChannel_IsLooping(int channel);
+void     _MusicMixerChannel_SetLoops(int channel, int loops);
+void     _MusicMixerChannel_DecreaseLoops(int channel);
+
 #endif
