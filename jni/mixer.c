@@ -60,7 +60,7 @@ static SDL_AudioSpec mixer;
 
 static _Mix_Channel *mix_channel = NULL;
 /* For the old-style, single-channel music API. */
-static _Mix_Channel mix_music_compat_channel;
+// static _Mix_Channel mix_music_compat_channel;
 
 static effect_info *posteffects = NULL;
 
@@ -168,9 +168,9 @@ int get_available_channel(void)
 void _HaltAllMusic(void)
 {
 	int i;
-	if ( mix_music_compat_channel.playing ) {
-		Mix_HaltMusicCh(mix_music_compat_channel.music);
-	}
+	// if ( mix_music_compat_channel.playing ) {
+	//	Mix_HaltMusicCh(mix_music_compat_channel.music);
+	// }
 	for ( i=0; i<num_channels; ++i ) {
 		if ((mix_channel[i].is_music) && mix_channel[i].playing)
 			Mix_HaltMusicCh(mix_channel[i].music);
@@ -180,9 +180,9 @@ void _HaltAllMusic(void)
 SDL_bool _MusicIsPlaying(Mix_Music * song)
 {
 	int i;
-	if ( mix_music_compat_channel.music == song && mix_music_compat_channel.playing ) {
-		return SDL_TRUE;
-	}
+	// if ( mix_music_compat_channel.music == song && mix_music_compat_channel.playing ) {
+	// 	return SDL_TRUE;
+	// }
 	for ( i=0; i<num_channels; ++i ) {
 		if ((mix_channel[i].music == song) && mix_channel[i].playing)
 			return SDL_TRUE;
@@ -336,10 +336,10 @@ static int _Mix_remove_all_effects(int channel, effect_info **e);
  */
 static void _Mix_channel_done_playing(int channel)
 {
-	if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
+	//if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
 		/* No need to do anything for the single-channel music stream. */
-		return;
-	}
+	//	return;
+	//}
 
     if (channel_done_callback) {
         channel_done_callback(channel_done_callback_userdata, channel);
@@ -358,9 +358,10 @@ _Mix_Channel *_StartMusic(int which, int is_fading, Mix_Music* music)
 	/* Lock the mixer while modifying the playing channels */
 	SDL_LockAudio();
 	{
-		if ( which == MUSIC_COMPAT_MAGIC_CHANNEL ) {
-			channel = &mix_music_compat_channel;
-		} else if ( which >= 0 && which < num_channels ) {
+		//if ( which == MUSIC_COMPAT_MAGIC_CHANNEL ) {
+		//	channel = &mix_music_compat_channel;
+		//} else 
+		if ( which >= 0 && which < num_channels ) {
 			channel = &mix_channel[which];
 		}
 		/* Queue up the audio data for this channel */
@@ -393,11 +394,11 @@ void _ClearMusic(Mix_Music * song)
 {
 	int i;
 
-	if ( mix_music_compat_channel.music == song ) {
-		mix_music_compat_channel.playing = 0;
-		mix_music_compat_channel.looping = 0;
-		mix_music_compat_channel.music = NULL;
-	}
+	//if ( mix_music_compat_channel.music == song ) {
+	//	mix_music_compat_channel.playing = 0;
+	//	mix_music_compat_channel.looping = 0;
+	//	mix_music_compat_channel.music = NULL;
+	//}
 
 	for ( i=0; i<num_channels; ++i ) {
 		if ((mix_channel[i].is_music) && (mix_channel[i].music == song)){
@@ -415,7 +416,8 @@ void *Mix_DoEffects(int chan, void *snd, int len)
 	void *buf = snd;
 
 	/* The single-channel music stream supports only postmix effects. */
-	if ( (chan == MUSIC_COMPAT_MAGIC_CHANNEL) || posteffect ) {
+	// if ( (chan == MUSIC_COMPAT_MAGIC_CHANNEL) || posteffect ) {
+	if (posteffect) {
 		e = posteffects;
 	} else {
 		e = mix_channel[chan].effects;
@@ -545,13 +547,14 @@ static void mix_channels(void *udata, Uint8 *stream, int len)
 #endif
 
 	/* Mix the music (must be done before the channels are added) */
-	if ( (mix_music_compat_channel.playing) && ( ! mix_music_compat_channel.paused ) ) {
-		if (mix_compat_music != NULL) {
-			mix_compat_music(music_compat_data, stream, len);
-		} else {
-			mix_music(music_data, mix_music_compat_channel.music, stream, len, MUSIC_COMPAT_MAGIC_CHANNEL);
-		}
-	}
+	//if ( (mix_music_compat_channel.playing) && ( ! mix_music_compat_channel.paused ) ) {
+	//	if (mix_compat_music != NULL) {
+	//		mix_compat_music(music_compat_data, stream, len);
+	//	} else {
+	//		mix_music(music_data, mix_music_compat_channel.music, stream, len, MUSIC_COMPAT_MAGIC_CHANNEL);
+	//	}
+	//}
+
 	for ( i=0; i<num_channels; ++i ) {
 		if ((mix_channel[i].is_music) && (mix_channel[i].playing) && ( ! mix_channel[i].paused )) {
 			mix_music(music_data, mix_channel[i].music, stream, len, i);
@@ -561,7 +564,7 @@ static void mix_channels(void *udata, Uint8 *stream, int len)
 	/* Mix any playing channels... */
 	sdl_ticks = SDL_GetTicks();
 	for ( i=0; i<num_channels; ++i ) {
-		if ((! mix_channel[i].is_music) && ( ! mix_channel[i].paused )) {
+		if ((! mix_channel[i].is_music) && (mix_channel[i].playing) && ( ! mix_channel[i].paused )) {
 			do_mix_channel(udata, stream, len, &mix_channel[i], mix_channel[i].sound, i, sdl_ticks);
 		}
 	}
@@ -652,10 +655,10 @@ int Mix_OpenAudio(int frequency, Uint16 format, int nchannels, int chunksize)
 		_Mix_InitChannel(i);
 	}
 
-	mix_music_compat_channel = mix_channel[0];
-	mix_music_compat_channel.sound = NULL;
-	mix_music_compat_channel.is_music = SDL_TRUE;
-	mix_music_compat_channel.playing = 0;
+	//mix_music_compat_channel = mix_channel[0];
+	//mix_music_compat_channel.sound = NULL;
+	//mix_music_compat_channel.is_music = SDL_TRUE;
+	//mix_music_compat_channel.playing = 0;
 
     _Mix_InitEffects();
 
@@ -708,7 +711,7 @@ int Mix_AllocateChannels(int numchans)
 
 	// realloc() can return a different ptr than initial alloc()
 	// so update our reference to the array start
-	mix_music_compat_channel = mix_channel[0];
+	// mix_music_compat_channel = mix_channel[0];
 
     SDL_UnlockAudio();
     return(num_channels);
@@ -1434,12 +1437,12 @@ int Mix_Playing(int which)
 				++status;
 			}
 		}
-	} else if ( which == MUSIC_COMPAT_MAGIC_CHANNEL ) {
-		if ( (mix_music_compat_channel.playing > 0) ||
-			 (mix_music_compat_channel.looping > 0) )
-		{
-			++status;
-		}
+	//} else if ( which == MUSIC_COMPAT_MAGIC_CHANNEL ) {
+	//	if ( (mix_music_compat_channel.playing > 0) ||
+	//		 (mix_music_compat_channel.looping > 0) )
+	//	{
+	//		++status;
+	//	}
 	} else if ( which < num_channels ) {
 		if ( (mix_channel[which].playing > 0) ||
 		     (mix_channel[which].looping > 0) )

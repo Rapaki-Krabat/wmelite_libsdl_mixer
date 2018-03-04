@@ -6,7 +6,8 @@
 /* We treat music played through the old API, which doesn't support channels,
  * in a special manner: we use a non-existing, magic channel number.  This is
  * an evil hack of course. */
-#define MUSIC_COMPAT_MAGIC_CHANNEL -666
+// disabled to switch off old API that should not be used anymore
+// #define MUSIC_COMPAT_MAGIC_CHANNEL -666
 
 int open_music(SDL_AudioSpec *mixer);
 void close_music(void);

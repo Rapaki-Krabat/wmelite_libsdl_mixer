@@ -76,7 +76,7 @@ static SDL_AudioSpec used_mixer;
 #endif
 
 
-static Mix_Music* music_compat_stream = NULL;
+// static Mix_Music* music_compat_stream = NULL;
 static int volatile music_stopped = 0;
 static char *music_cmd = NULL;
 // use a separate volume setting per music channel
@@ -195,7 +195,8 @@ static void music_internal_halt(Mix_Music *music);
 static void (*music_finished_hook)(void *userdata, Mix_Music *music, int channel) = NULL;
 static void *music_finished_hook_userdata;
 
-static void (*music_compat_finished_hook)(void) = NULL;
+// disabled with disabling the old API
+// static void (*music_compat_finished_hook)(void) = NULL;
 
 /* Support for hooking when the music is about to loop */
 static void (*music_looping_hook)(Mix_Music *music, int channel) = NULL;
@@ -208,13 +209,14 @@ void Mix_HookMusicFinishedCh(void *userdata, void (*music_finished)(void *userda
 	SDL_UnlockAudio();
 }
 
-
+/*
 void Mix_HookMusicFinished(void (*music_finished)(void))
 {
 	SDL_LockAudio();
 	music_compat_finished_hook = music_finished;
 	SDL_UnlockAudio();
 }
+*/
 
 void Mix_HookMusicLoopingCh(void (*music_looping)(Mix_Music *music, int channel))
 {
@@ -257,8 +259,9 @@ static int music_halt_or_loop (Mix_Music * music_playing, int channel)
 			current_fade = music_playing->fading;
 			music_internal_play(music_playing, music_playing->loop_start, channel);
 			music_playing->fading = current_fade;
-			if ((channel != MUSIC_COMPAT_MAGIC_CHANNEL) && music_looping_hook) {
-				music_looping_hook(music_playing, channel);
+			// if ((channel != MUSIC_COMPAT_MAGIC_CHANNEL) && music_looping_hook) {
+			if (music_looping_hook) {
+					music_looping_hook(music_playing, channel);
 			}
 		}
 		else
@@ -305,11 +308,12 @@ void music_mixer(void *udata, Mix_Music * music_playing, Uint8 *master_stream, i
 	music_halt_or_loop(music_playing, channel);
 	if (!music_internal_playing(music_playing)) {
 		_ClearMusic(music_playing);
-		if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
-			if ( music_compat_finished_hook ) {
-				music_compat_finished_hook();
-			}
-		} else if ( music_finished_hook ) {
+		//if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
+		//	if ( music_compat_finished_hook ) {
+		//		music_compat_finished_hook();
+		//	}
+		//} else 
+		if ( music_finished_hook ) {
 			music_finished_hook(music_finished_hook_userdata, music_playing, channel);
 		}
 		return;
@@ -912,9 +916,9 @@ void Mix_FreeMusic(Mix_Music *music)
 
     skip:
         SDL_free(music);
-		if ( music == music_compat_stream ) {
-			music_compat_stream = NULL;
-		}
+		//if ( music == music_compat_stream ) {
+		//	music_compat_stream = NULL;
+		//}
     }
 }
 
@@ -954,11 +958,11 @@ static int music_internal_play(Mix_Music *music, double position, int channel)
 	}
 #endif
 
-	if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
-		Mix_HaltMusic();
-	} else {
+	//if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
+	//	Mix_HaltMusic();
+	//} else {
 		Mix_HaltChannel(channel);
-	}
+	//}
 
 	/* Set the initial volume */
 	if ( music->type != MUS_MOD ) {
@@ -1106,16 +1110,16 @@ int Mix_FadeInMusicPosCh(Mix_Music *music, int loops, int ms, int channel, doubl
 		}
 	} else {
 		/* If the current music is fading out, wait for the fade to complete */
-		if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
-			music_compat_stream = music;
-			while ( music_compat_stream && (music_compat_stream->fading == MIX_FADING_OUT) ) {
-				SDL_UnlockAudio();
-				SDL_Delay(100);
-				SDL_LockAudio();
-			}
-		} else {
+		//if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
+		//	music_compat_stream = music;
+		//	while ( music_compat_stream && (music_compat_stream->fading == MIX_FADING_OUT) ) {
+		//		SDL_UnlockAudio();
+		//		SDL_Delay(100);
+		//		SDL_LockAudio();
+		//	}
+		//} else {
 			_WaitForChannelFade(channel);
-		}
+		//}
 	}
 	if (loops < -1) {
 		loops = -1;
@@ -1142,26 +1146,26 @@ int Mix_FadeInMusicPosCh(Mix_Music *music, int loops, int ms, int channel, doubl
 	}
 	return(retval);
 }
-int Mix_FadeInMusicPos(Mix_Music *music, int loops, int ms, double position)
-{
-	return Mix_FadeInMusicPosCh(music, loops, ms, MUSIC_COMPAT_MAGIC_CHANNEL, position);
-}
+//int Mix_FadeInMusicPos(Mix_Music *music, int loops, int ms, double position)
+//{
+//	return Mix_FadeInMusicPosCh(music, loops, ms, MUSIC_COMPAT_MAGIC_CHANNEL, position);
+//}
 int Mix_FadeInMusicCh(Mix_Music *music, int loops, int ms, int channel)
 {
 	return Mix_FadeInMusicPosCh(music, loops, ms, channel, 0.0);
 }
-int Mix_FadeInMusic(Mix_Music *music, int loops, int ms)
-{
-	return Mix_FadeInMusicCh(music, loops, ms, MUSIC_COMPAT_MAGIC_CHANNEL);
-}
+//int Mix_FadeInMusic(Mix_Music *music, int loops, int ms)
+//{
+//	return Mix_FadeInMusicCh(music, loops, ms, MUSIC_COMPAT_MAGIC_CHANNEL);
+//}
 int Mix_PlayMusicCh(Mix_Music *music, int loops, int channel)
 {
 	return Mix_FadeInMusicPosCh(music, loops, 0, channel, 0.0);
 }
-int Mix_PlayMusic(Mix_Music *music, int loops)
-{
-	return Mix_PlayMusicCh(music, loops, MUSIC_COMPAT_MAGIC_CHANNEL);
-}
+//int Mix_PlayMusic(Mix_Music *music, int loops)
+//{
+//	return Mix_PlayMusicCh(music, loops, MUSIC_COMPAT_MAGIC_CHANNEL);
+//}
 
 int Mix_SetMusicLoops(Mix_Music *music, int channel, int loops)
 {
@@ -1255,22 +1259,22 @@ int Mix_SetMusicPositionCh(double position, int channel)
 	Mix_Music* music;
 
 	SDL_LockAudio();
-	if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
-		music = music_compat_stream;
-	} else {
+	//if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
+	//	music = music_compat_stream;
+	//} else {
 		music = _ChannelPlayingMusic(channel);
-	}
+	//}
 	if ( music ) {
 		retval = music_internal_position(position, music);
 		if ( retval < 0 ) {
 			Mix_SetError("Position not implemented for music type");
 		}
 	} else {
-		if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
+		//if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
 			Mix_SetError("No music playing on channel %d", channel);
-		} else {
-			Mix_SetError("No music playing");
-		}
+		//} else {
+		//	Mix_SetError("No music playing");
+		//}
 		retval = -1;
 	}
 	SDL_UnlockAudio();
@@ -1278,10 +1282,10 @@ int Mix_SetMusicPositionCh(double position, int channel)
 	return(retval);
 }
 
-int Mix_SetMusicPosition(double position)
-{
-	return Mix_SetMusicPositionCh(position, MUSIC_COMPAT_MAGIC_CHANNEL);
-}
+//int Mix_SetMusicPosition(double position)
+//{
+//	return Mix_SetMusicPositionCh(position, MUSIC_COMPAT_MAGIC_CHANNEL);
+//}
 
 /* Get the current playing music position */
 double music_internal_getposition(Mix_Music *music_playing)
@@ -1329,11 +1333,11 @@ double Mix_GetMusicPositionCh(int channel)
 	retval = -1.0;
 
 	SDL_LockAudio();
-	if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
-		music = music_compat_stream;
-	} else {
+	//if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
+	//	music = music_compat_stream;
+	//} else {
 		music = _ChannelPlayingMusic(channel);
-	}
+	//}
 	if (music) {
 		retval = music_internal_getposition(music);
 	}
@@ -1435,11 +1439,11 @@ int Mix_VolumeMusicCh(int volume, int channel)
     }
 
     SDL_LockAudio();
-	if ( channel == MUSIC_COMPAT_MAGIC_CHANNEL ) {
-		music_playing = music_compat_stream;
-	} else {
+	//if ( channel == MUSIC_COMPAT_MAGIC_CHANNEL ) {
+	//	music_playing = music_compat_stream;
+	//} else {
 		music_playing = _ChannelPlayingMusic(channel);
-	}
+	//}
     if ( music_playing ) {
 		// find previous volume
 		prev_volume = music_playing->volume;
@@ -1454,10 +1458,10 @@ int Mix_VolumeMusicCh(int volume, int channel)
     SDL_UnlockAudio();
     return(prev_volume);
 }
-int Mix_VolumeMusic(int volume)
-{
-	return Mix_VolumeMusicCh(volume, MUSIC_COMPAT_MAGIC_CHANNEL);
-}
+//int Mix_VolumeMusic(int volume)
+//{
+//	return Mix_VolumeMusicCh(volume, MUSIC_COMPAT_MAGIC_CHANNEL);
+//}
 
 /* Halt playing of music */
 static void music_internal_halt(Mix_Music * music_playing)
@@ -1543,11 +1547,11 @@ int Mix_HaltMusicCh(Mix_Music *music)
 	if (music){
 		int is_playing;
 		SDL_LockAudio();
-		if (music == music_compat_stream) {
-			is_playing = music_internal_playing(music);
-		} else {
+		//if (music == music_compat_stream) {
+		//	is_playing = music_internal_playing(music);
+		//} else {
 			is_playing = _MusicIsPlaying(music);
-		}
+		//}
 		if (is_playing) {
 			music_internal_halt(music);
 			_ClearMusic(music);
@@ -1558,28 +1562,28 @@ int Mix_HaltMusicCh(Mix_Music *music)
 	return(0);
 }
 
-int Mix_HaltMusic(void)
-{
-	return Mix_HaltMusicCh(music_compat_stream);
-}
+//int Mix_HaltMusic(void)
+//{
+//	return Mix_HaltMusicCh(music_compat_stream);
+//}
 
 /* Progressively stop the music */
 int Mix_FadeOutMusicCh(int ms, int channel)
 {
 	int retval = 0;
 	Mix_Music* music_playing;
-	if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
-		music_playing = music_compat_stream;
-	} else {
+	//if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
+	//	music_playing = music_compat_stream;
+	//} else {
 		music_playing = _ChannelPlayingMusic(channel);
-	}
+	//}
 
 	if (!music_playing){
-		if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
-			SDL_SetError("No music playing");
-		} else {
+		//if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
+		//	SDL_SetError("No music playing");
+		//} else {
 			SDL_SetError("No music playing on channel %d", channel);
-		}
+		//}
 		return 0;
 	}
 
@@ -1619,10 +1623,10 @@ int Mix_FadeOutMusicCh(int ms, int channel)
 	return(retval);
 }
 
-int Mix_FadeOutMusic(int ms)
-{
-	return Mix_FadeOutMusicCh(ms, MUSIC_COMPAT_MAGIC_CHANNEL);
-}
+//int Mix_FadeOutMusic(int ms)
+//{
+//	return Mix_FadeOutMusicCh(ms, MUSIC_COMPAT_MAGIC_CHANNEL);
+//}
 
 Mix_Fading Mix_FadingMusicCh(int channel)
 {
@@ -1630,11 +1634,11 @@ Mix_Fading Mix_FadingMusicCh(int channel)
 	Mix_Music* music_playing;
 
 	SDL_LockAudio();
-	if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
-		music_playing = music_compat_stream;
-	} else {
+	//if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
+	//	music_playing = music_compat_stream;
+	//} else {
 		music_playing = _ChannelPlayingMusic(channel);
-	}
+	//}
 	if ( music_playing ) {
 		fading = music_playing->fading;
 	}
@@ -1643,32 +1647,32 @@ Mix_Fading Mix_FadingMusicCh(int channel)
 	return(fading);
 }
 
-Mix_Fading Mix_FadingMusic(void)
-{
-	return Mix_FadingMusicCh(MUSIC_COMPAT_MAGIC_CHANNEL);
-}
+//Mix_Fading Mix_FadingMusic(void)
+//{
+//	return Mix_FadingMusicCh(MUSIC_COMPAT_MAGIC_CHANNEL);
+//}
 
 
 /* Pause/Resume the music stream */
-void Mix_PauseMusic(void)
-{
-	Mix_PauseMusicCh(MUSIC_COMPAT_MAGIC_CHANNEL);
-}
+//void Mix_PauseMusic(void)
+//{
+//	Mix_PauseMusicCh(MUSIC_COMPAT_MAGIC_CHANNEL);
+//}
 
-void Mix_ResumeMusic(void)
-{
-	Mix_ResumeMusicCh(MUSIC_COMPAT_MAGIC_CHANNEL);
-}
+//void Mix_ResumeMusic(void)
+//{
+//	Mix_ResumeMusicCh(MUSIC_COMPAT_MAGIC_CHANNEL);
+//}
 
-void Mix_RewindMusic(void)
-{
-	Mix_RewindMusicCh(MUSIC_COMPAT_MAGIC_CHANNEL);
-}
+//void Mix_RewindMusic(void)
+//{
+//	Mix_RewindMusicCh(MUSIC_COMPAT_MAGIC_CHANNEL);
+//}
 
-int Mix_PausedMusic(void)
-{
-	return Mix_PausedMusicCh(MUSIC_COMPAT_MAGIC_CHANNEL);
-}
+//int Mix_PausedMusic(void)
+//{
+//	return Mix_PausedMusicCh(MUSIC_COMPAT_MAGIC_CHANNEL);
+//}
 
 void Mix_RewindMusicCh(int channel)
 {
@@ -1779,11 +1783,11 @@ int Mix_PlayingMusicCh(int channel)
 	Mix_Music* music_playing;
 
 	SDL_LockAudio();
-	if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
-		music_playing = music_compat_stream;
-	} else {
+	//if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
+	//	music_playing = music_compat_stream;
+	//} else {
 		music_playing = _ChannelPlayingMusic(channel);
-	}
+	//}
 	if ( music_playing ) {
 #ifdef USE_MIXER_FUNCTIONS_INSTEAD_OF_CHANNEL_PTR
 		playing = (_MusicMixerChannel_IsLooping(music_playing->mix_channel) == SDL_TRUE)
@@ -1799,19 +1803,19 @@ int Mix_PlayingMusicCh(int channel)
 	return(playing);
 }
 
-int Mix_PlayingMusic(void)
-{
-	return Mix_PlayingMusicCh(MUSIC_COMPAT_MAGIC_CHANNEL);
-}
+//int Mix_PlayingMusic(void)
+//{
+//	return Mix_PlayingMusicCh(MUSIC_COMPAT_MAGIC_CHANNEL);
+//}
 
 /* Set the external music playback command */
 int Mix_SetMusicCMDCh(const char *command, int channel)
 {
-	if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
-		Mix_HaltMusic();
-	} else {
+	//if (channel == MUSIC_COMPAT_MAGIC_CHANNEL) {
+	//	Mix_HaltMusic();
+	//} else {
 		Mix_HaltMusicCh(_ChannelPlayingMusic(channel));
-	}
+	//}
     if ( music_cmd ) {
         SDL_free(music_cmd);
         music_cmd = NULL;
@@ -1826,10 +1830,10 @@ int Mix_SetMusicCMDCh(const char *command, int channel)
     return(0);
 }
 
-int Mix_SetMusicCMD(const char *command)
-{
-	return Mix_SetMusicCMDCh(command, MUSIC_COMPAT_MAGIC_CHANNEL);
-}
+//int Mix_SetMusicCMD(const char *command)
+//{
+//	return Mix_SetMusicCMDCh(command, MUSIC_COMPAT_MAGIC_CHANNEL);
+//}
 
 int Mix_SetSynchroValue(int i)
 {
