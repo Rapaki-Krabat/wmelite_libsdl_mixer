@@ -1,0 +1,182 @@
+# Configuration for iPhone OS, making static libs
+# this will generate both iPhone (arm) and iPhoneSimulator (i686) libs
+
+TARGET = SDL2_mixer
+INCLUDE=-Itimidity -I./external/libmodplug-0.8.8.4/src -Iexternal/libvorbisidec-1.2.1 \
+-I./external/libmodplug-0.8.8.4/src/libmodplug/ \
+-I. -I../../SDL_merged/include/ -Iexternal/libogg-1.3.1/include \
+-DWAV_MUSIC -DMODPLUG_MUSIC -D"MODPLUG_HEADER=<modplug.h>" -DMID_MUSIC \
+-DOGG_MUSIC -DOGG_USE_TREMOR -D"OGG_HEADER=<ivorbisfile.h>" -DHAVE_STDINT_H \
+-DHAVE_SETENV -DHAVE_SINF -D__MACOSX__
+SRCS=\
+	./mixer.c \
+	./music_cmd.c \
+	./music_ogg.c \
+	./music.c \
+	./timidity/common.c \
+	./timidity/ctrlmode.c \
+	./timidity/filter.c \
+	./timidity/instrum.c \
+	./timidity/mix.c \
+	./timidity/output.c \
+	./timidity/playmidi.c \
+	./timidity/readmidi.c \
+	./timidity/resample.c \
+	./timidity/sdl_a.c \
+	./timidity/sdl_c.c \
+	./timidity/tables.c \
+	./timidity/timidity.c \
+	./wavestream.c \
+	./effect_position.c \
+	./effect_stereoreverse.c \
+	./effects_internal.c \
+	./load_aiff.c \
+	./load_voc.c \
+	./load_ogg.c \
+	./dynamic_mp3.c \
+	./dynamic_ogg.c \
+	./dynamic_flac.c \
+	./dynamic_mod.c \
+	./dynamic_fluidsynth.c \
+	./fluidsynth.c \
+	./music_modplug.c \
+	./external/libogg-1.3.1/src/bitwise.c \
+	./external/libogg-1.3.1/src/framing.c \
+	./external/libvorbisidec-1.2.1/block.c \
+	./external/libvorbisidec-1.2.1/codebook.c \
+	./external/libvorbisidec-1.2.1/floor0.c \
+	./external/libvorbisidec-1.2.1/floor1.c \
+	./external/libvorbisidec-1.2.1/info.c \
+	./external/libvorbisidec-1.2.1/mapping0.c \
+	./external/libvorbisidec-1.2.1/mdct.c \
+	./external/libvorbisidec-1.2.1/registry.c \
+	./external/libvorbisidec-1.2.1/res012.c \
+	./external/libvorbisidec-1.2.1/sharedbook.c \
+	./external/libvorbisidec-1.2.1/synthesis.c \
+	./external/libvorbisidec-1.2.1/vorbisfile.c \
+	./external/libvorbisidec-1.2.1/window.c \
+	./external/libmodplug-0.8.8.4/src/fastmix.cpp \
+	./external/libmodplug-0.8.8.4/src/load_669.cpp \
+	./external/libmodplug-0.8.8.4/src/load_abc.cpp \
+	./external/libmodplug-0.8.8.4/src/load_amf.cpp \
+	./external/libmodplug-0.8.8.4/src/load_ams.cpp \
+	./external/libmodplug-0.8.8.4/src/load_dbm.cpp \
+	./external/libmodplug-0.8.8.4/src/load_dmf.cpp \
+	./external/libmodplug-0.8.8.4/src/load_dsm.cpp \
+	./external/libmodplug-0.8.8.4/src/load_far.cpp \
+	./external/libmodplug-0.8.8.4/src/load_it.cpp \
+	./external/libmodplug-0.8.8.4/src/load_j2b.cpp \
+	./external/libmodplug-0.8.8.4/src/load_mdl.cpp \
+	./external/libmodplug-0.8.8.4/src/load_med.cpp \
+	./external/libmodplug-0.8.8.4/src/load_mid.cpp \
+	./external/libmodplug-0.8.8.4/src/load_mod.cpp \
+	./external/libmodplug-0.8.8.4/src/load_mt2.cpp \
+	./external/libmodplug-0.8.8.4/src/load_mtm.cpp \
+	./external/libmodplug-0.8.8.4/src/load_okt.cpp \
+	./external/libmodplug-0.8.8.4/src/load_pat.cpp \
+	./external/libmodplug-0.8.8.4/src/load_psm.cpp \
+	./external/libmodplug-0.8.8.4/src/load_ptm.cpp \
+	./external/libmodplug-0.8.8.4/src/load_s3m.cpp \
+	./external/libmodplug-0.8.8.4/src/load_stm.cpp \
+	./external/libmodplug-0.8.8.4/src/load_ult.cpp \
+	./external/libmodplug-0.8.8.4/src/load_umx.cpp \
+	./external/libmodplug-0.8.8.4/src/load_wav.cpp \
+	./external/libmodplug-0.8.8.4/src/load_xm.cpp \
+	./external/libmodplug-0.8.8.4/src/mmcmp.cpp \
+	./external/libmodplug-0.8.8.4/src/modplug.cpp \
+	./external/libmodplug-0.8.8.4/src/snd_dsp.cpp \
+	./external/libmodplug-0.8.8.4/src/snd_flt.cpp \
+	./external/libmodplug-0.8.8.4/src/snd_fx.cpp \
+	./external/libmodplug-0.8.8.4/src/sndfile.cpp \
+	./external/libmodplug-0.8.8.4/src/sndmix.cpp \
+	./dynamic_modplug.c \
+	./load_mp3.c
+
+INSTALLDIR_HEADERS=libSDL2_mixer/include/
+INSTALLDIR_LIBRARY=libSDL2_mixer/libcombined/
+INSTALLDIR=`$(PLATFORM_CONFIG) --installdir`
+INSTALL_HEADERS=SDL_mixer.h
+
+ifeq ($(CUSTOM_PLATFORM_CONFIG),)
+PLATFORM_CONFIG=../../macos_platform_config.sh
+else
+PLATFORM_CONFIG=$(CUSTOM_PLATFORM_CONFIG)
+endif
+
+STD_CFLAGS   = `$(PLATFORM_CONFIG) --cflags`
+STD_CXXFLAGS = `$(PLATFORM_CONFIG) --cxxflags`
+
+MACOS_DEPLOYMENT_TARGET = `$(PLATFORM_CONFIG) --minversion`
+
+ARCH_I386 = i386
+ARCH_X86_64 = x86_64
+
+SDKROOT = `$(PLATFORM_CONFIG) --sysroot`
+
+EXTRA_CFLAGS   += $(INCLUDE)
+SRCS_TO_COMPILE=$(SRCS)
+
+EXTRA_CFLAGS += -isysroot $(SDKROOT)
+EXTRA_CFLAGS += -mmacosx-version-min=$(MACOS_DEPLOYMENT_TARGET)
+
+AR = `$(PLATFORM_CONFIG) --ar`
+
+CC = `$(PLATFORM_CONFIG) --cc`
+CXX = `$(PLATFORM_CONFIG) --cxx`
+LIBTOOL = `$(PLATFORM_CONFIG) --libtool`
+LIPO = `$(PLATFORM_CONFIG) --lipo`
+
+CFLAGS = $(STD_CFLAGS) $(EXTRA_CFLAGS)
+CXXFLAGS += $(STD_CXXFLAGS) $(EXTRA_CFLAGS)
+
+STATICLIB = lib$(TARGET).a
+
+.SUFFIXES: .o-i386 .o-x86_64
+MODULES_i386 = $(SRCS_TO_COMPILE:.c=.o-i386)
+MODULES_i386 := $(MODULES_i386:.cpp=.o-i386)
+MODULES_x86_64 = $(SRCS_TO_COMPILE:.c=.o-x86_64)
+MODULES_x86_64 := $(MODULES_x86_64:.cpp=.o-x86_64)
+
+default: all
+
+all: $(TARGET)
+
+$(TARGET): $(STATICLIB)
+
+$(STATICLIB): $(STATICLIB)-i386 $(STATICLIB)-x86_64
+	$(LIPO) -create $(STATICLIB)-i386 $(STATICLIB)-x86_64 -output $(STATICLIB)
+
+$(STATICLIB)-i386: $(MODULES_i386)
+	$(LIBTOOL) -arch_only $(ARCH_I386) -o $@ $(MODULES_i386)
+
+$(STATICLIB)-x86_64: $(MODULES_x86_64)
+	$(LIBTOOL) -arch_only $(ARCH_X86_64) -o $@ $(MODULES_x86_64)
+
+.c.o-i386:
+	@echo " (CC-i386) $<"
+	@$(CC) -arch $(ARCH_I386) $(CFLAGS) -c $< -o $@
+
+.cpp.o-i386:
+	@echo " (C++-i386) $<"
+	@$(CXX) -arch $(ARCH_I386) $(CXXFLAGS) -c $< -o $@
+
+.c.o-x86_64:
+	@echo " (CC-x86_64) $<"
+	@$(CC) -arch $(ARCH_X86_64) $(CFLAGS) -c $< -o $@
+
+.cpp.o-x86_64:
+	@echo " (C++-x86_64) $<"
+	@$(CXX) -arch $(ARCH_X86_64) $(CXXFLAGS) -c $< -o $@
+
+combine_libs:
+	$(LIPO) -info $(STATICLIB)
+	
+install: combine_libs
+	mkdir -p $(INSTALLDIR)/$(INSTALLDIR_HEADERS)
+	mkdir -p $(INSTALLDIR)/$(INSTALLDIR_LIBRARY)
+	cp $(INSTALL_HEADERS) $(INSTALLDIR)/$(INSTALLDIR_HEADERS)
+	cp $(STATICLIB) $(INSTALLDIR)/$(INSTALLDIR_LIBRARY)
+	
+clean:
+	rm -f core Dist/*.* u2dtmp* $(MODULES_i386) $(MODULES_x86_64) $(STATICLIB) $(STATICLIB)-i386 $(STATICLIB)-x86_64 
+

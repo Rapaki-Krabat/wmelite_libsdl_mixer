@@ -1,0 +1,66 @@
+
+CC=i586-mingw32msvc-gcc
+CPP=i586-mingw32msvc-g++
+RM=rm
+AR=i586-mingw32msvc-ar
+
+INCLUDE=-Itimidity -I./external/libmodplug-0.8.8.4/src -Iexternal/libvorbisidec-1.2.1 \
+-I./external/libmodplug-0.8.8.4/src/libmodplug/ \
+-I. -I../../SDL_merged/include/ -Iexternal/libogg-1.3.1/include \
+-DWAV_MUSIC  \
+-DOGG_MUSIC -DOGG_USE_TREMOR -D"OGG_HEADER=<ivorbisfile.h>" -DHAVE_STDINT_H \
+-DHAVE_SETENV -DHAVE_SINF
+
+SRCS=\
+	./mixer.c \
+	./music_cmd.c \
+	./music_ogg.c \
+	./music.c \
+	./wavestream.c \
+	./effect_position.c \
+	./effect_stereoreverse.c \
+	./effects_internal.c \
+	./load_aiff.c \
+	./load_voc.c \
+	./load_ogg.c \
+	./dynamic_mp3.c \
+	./dynamic_ogg.c \
+	./dynamic_flac.c \
+	./dynamic_fluidsynth.c \
+	./fluidsynth.c \
+	./external/libogg-1.3.1/src/bitwise.c \
+	./external/libogg-1.3.1/src/framing.c \
+	./external/libvorbisidec-1.2.1/block.c \
+	./external/libvorbisidec-1.2.1/codebook.c \
+	./external/libvorbisidec-1.2.1/floor0.c \
+	./external/libvorbisidec-1.2.1/floor1.c \
+	./external/libvorbisidec-1.2.1/info.c \
+	./external/libvorbisidec-1.2.1/mapping0.c \
+	./external/libvorbisidec-1.2.1/mdct.c \
+	./external/libvorbisidec-1.2.1/registry.c \
+	./external/libvorbisidec-1.2.1/res012.c \
+	./external/libvorbisidec-1.2.1/sharedbook.c \
+	./external/libvorbisidec-1.2.1/synthesis.c \
+	./external/libvorbisidec-1.2.1/vorbisfile.c \
+	./external/libvorbisidec-1.2.1/window.c \
+	./load_mp3.c
+
+MODULES  =  $(SRCS:.c=.o)
+MODULES :=  $(MODULES:.cpp=.o)
+
+staticlib: $(MODULES)
+	$(AR) rcs libSDL_mixer.a $(MODULES)
+
+.c.o:
+	@echo " (CC) $<"
+	@$(CC) $(INCLUDE) -c $< -o $@
+
+.cpp.o:
+	@echo " (C++) $<"
+	@$(CPP) $(INCLUDE) -c $< -o $@
+
+all: staticlib
+
+clean:
+	rm -f *.o *.a
+	
