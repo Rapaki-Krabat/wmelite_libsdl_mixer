@@ -29,7 +29,36 @@ VORBIS_LIBRARY_PATH := src/external/libvorbisidec-1.2.1
 LOCAL_C_INCLUDES := $(LOCAL_PATH)
 LOCAL_CFLAGS := -DWAV_MUSIC
 
-LOCAL_SRC_FILES := $(notdir $(filter-out %/playmus.c %/playwave.c, $(wildcard $(LOCAL_PATH)/src/*.c)))
+# LOCAL_SRC_FILES := $(notdir $(filter-out %/playmus.c %/playwave.c, $(wildcard $(LOCAL_PATH)/*.c)))
+
+LOCAL_SRC_FILES := \
+src/dynamic_flac.c           \
+src/dynamic_fluidsynth.c     \
+src/dynamic_mod.c            \
+src/dynamic_modplug.c        \
+src/dynamic_mp3.c            \
+src/dynamic_ogg.c            \
+src/effect_position.c        \
+src/effects_internal.c       \
+src/effect_stereoreverse.c   \
+src/fluidsynth.c             \
+src/load_aiff.c              \
+src/load_flac.c              \
+src/load_mp3.c               \
+src/load_ogg.c               \
+src/load_voc.c               \
+src/mixer.c                  \
+src/music.c                  \
+src/music_cmd.c              \
+src/music_flac.c             \
+src/music_mad.c              \
+src/music_mod.c              \
+src/music_modplug.c          \
+src/music_ogg.c              \
+src/wavestream.c
+
+
+$(info LOCAL_SRC_FILES is $(LOCAL_SRC_FILES))
 
 LOCAL_LDLIBS := 
 LOCAL_STATIC_LIBRARIES :=
