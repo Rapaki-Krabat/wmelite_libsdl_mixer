@@ -2,17 +2,6 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := SDL2
-ifeq ($(TARGET_ARCH_ABI),armeabi-v7a-hard)
-LOCAL_SRC_FILES := ../../SDL_merged/libs/armeabi-v7a/libSDL2.so
-else
-LOCAL_SRC_FILES := ../../SDL_merged/libs/$(TARGET_ARCH_ABI)/libSDL2.so
-endif
-
-include $(PREBUILT_SHARED_LIBRARY)
-
-include $(CLEAR_VARS)
-
 LOCAL_MODULE := SDL2_mixer
 
 # Enable this if you want to support loading MOD music via modplug
@@ -142,3 +131,18 @@ LOCAL_CFLAGS += -Wall -Wextra -Wcast-align -Wno-unused-label -Wno-unused-functio
 LOCAL_LDLIBS := -llog
 
 include $(BUILD_SHARED_LIBRARY)
+
+ifeq ($(DO_SOME_STRANGE_STUFF),true)
+
+	include $(CLEAR_VARS)
+
+	LOCAL_MODULE := SDL2
+	ifeq ($(TARGET_ARCH_ABI),armeabi-v7a-hard)
+	LOCAL_SRC_FILES := ../../SDL_merged/libs/armeabi-v7a/libSDL2.so
+	else
+	LOCAL_SRC_FILES := ../../SDL_merged/libs/$(TARGET_ARCH_ABI)/libSDL2.so
+	endif
+
+include $(PREBUILT_SHARED_LIBRARY)
+
+endif
