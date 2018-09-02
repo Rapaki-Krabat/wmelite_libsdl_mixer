@@ -58,7 +58,7 @@ src/music_ogg.c              \
 src/wavestream.c
 
 
-$(info LOCAL_SRC_FILES is $(LOCAL_SRC_FILES))
+# $(info LOCAL_SRC_FILES is $(LOCAL_SRC_FILES))
 
 LOCAL_LDLIBS := 
 LOCAL_STATIC_LIBRARIES :=
