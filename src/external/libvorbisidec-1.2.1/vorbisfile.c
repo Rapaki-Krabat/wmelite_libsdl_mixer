@@ -1161,7 +1161,7 @@ ogg_int64_t ov_pcm_total(OggVorbis_File *vf,int i){
             OV_EINVAL if the stream is not seekable (we can't know the
             length) or only partially open 
 */
-ogg_int64_t ov_time_total(OggVorbis_File *vf,int i){
+double ov_time_total(OggVorbis_File *vf,int i){
   if(vf->ready_state<OPENED)return(OV_EINVAL);
   if(!vf->seekable || i>=vf->links)return(OV_EINVAL);
   if(i<0){
@@ -1169,9 +1169,9 @@ ogg_int64_t ov_time_total(OggVorbis_File *vf,int i){
     int i;
     for(i=0;i<vf->links;i++)
       acc+=ov_time_total(vf,i);
-    return(acc);
+    return((double) acc);
   }else{
-    return(((ogg_int64_t)vf->pcmlengths[i*2+1])*1000/vf->vi[i].rate);
+    return(((double)vf->pcmlengths[i*2+1])*1000/vf->vi[i].rate);
   }
 }
 
