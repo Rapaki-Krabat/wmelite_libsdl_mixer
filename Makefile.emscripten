@@ -1,0 +1,68 @@
+
+CC=emcc
+CPP=em++
+RM=rm
+AR=emar
+
+INCLUDE=-Isrc/timidity -Isrc/external/libvorbisidec-1.2.1 \
+-Isrc/ -I../SDL_merged/include/ -Isrc/external/libogg-1.3.1/include \
+-DWAV_MUSIC -O2 \
+-DOGG_MUSIC -DOGG_USE_TREMOR -D"OGG_HEADER=<ivorbisfile.h>" -DHAVE_STDINT_H \
+-DHAVE_SETENV -DHAVE_SINF
+
+SRCS=\
+	./src/mixer.c \
+	./src/music_cmd.c \
+	./src/music_ogg.c \
+	./src/music.c \
+	./src/wavestream.c \
+	./src/effect_position.c \
+	./src/effect_stereoreverse.c \
+	./src/effects_internal.c \
+	./src/load_aiff.c \
+	./src/load_voc.c \
+	./src/load_ogg.c \
+	./src/dynamic_mp3.c \
+	./src/dynamic_ogg.c \
+	./src/dynamic_flac.c \
+	./src/dynamic_fluidsynth.c \
+	./src/fluidsynth.c \
+	./src/external/libogg-1.3.1/src/bitwise.c \
+	./src/external/libogg-1.3.1/src/framing.c \
+	./src/external/libvorbisidec-1.2.1/block.c \
+	./src/external/libvorbisidec-1.2.1/codebook.c \
+	./src/external/libvorbisidec-1.2.1/floor0.c \
+	./src/external/libvorbisidec-1.2.1/floor1.c \
+	./src/external/libvorbisidec-1.2.1/info.c \
+	./src/external/libvorbisidec-1.2.1/mapping0.c \
+	./src/external/libvorbisidec-1.2.1/mdct.c \
+	./src/external/libvorbisidec-1.2.1/registry.c \
+	./src/external/libvorbisidec-1.2.1/res012.c \
+	./src/external/libvorbisidec-1.2.1/sharedbook.c \
+	./src/external/libvorbisidec-1.2.1/synthesis.c \
+	./src/external/libvorbisidec-1.2.1/vorbisfile.c \
+	./src/external/libvorbisidec-1.2.1/window.c \
+	./src/load_mp3.c
+
+MODULES  =  $(SRCS:.c=.o)
+MODULES :=  $(MODULES:.cpp=.o)
+
+all: sharedlib
+
+staticlib: $(MODULES)
+	$(AR) rcs libSDL_mixer.a $(MODULES)
+
+sharedlib: $(MODULES)
+	$(CC) -s -shared -o libSDL_mixer.bc $(MODULES)
+
+.c.o:
+	@echo " (CC) $<"
+	@$(CC) $(INCLUDE) -c $< -o $@
+
+.cpp.o:
+	@echo " (C++) $<"
+	@$(CPP) $(INCLUDE) -c $< -o $@
+
+clean:
+	rm -f src/*.o src/*.a src/external/libogg-1.3.1/src/*.o src/external/libvorbisidec-1.2.1/*.o
+	
