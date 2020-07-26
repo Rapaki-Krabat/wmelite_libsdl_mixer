@@ -1,8 +1,8 @@
 
-CC=i586-mingw32msvc-gcc
-CPP=i586-mingw32msvc-g++
+CC=i686-w64-mingw32-gcc
+CPP=i686-w64-mingw32-g++
+AR=i686-w64-mingw32-ar
 RM=rm
-AR=i586-mingw32msvc-ar
 
 INCLUDE=-Itimidity -I./external/libmodplug-0.8.8.4/src -Iexternal/libvorbisidec-1.2.1 \
 -I./external/libmodplug-0.8.8.4/src/libmodplug/ \
