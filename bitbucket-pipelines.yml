@@ -17,7 +17,7 @@ pipelines:
           - git submodule update
           - mkdir -p build/mingw64/
           - cd build/mingw64/
-          - cmake -DCMAKE_TOOLCHAIN_FILE=/toolchain-mingw64.cmake -DUSE_LOCAL_SDL2=1 ../../
+          - cmake -DCMAKE_TOOLCHAIN_FILE=/toolchain-mingw64.cmake -DUSE_LOCAL_SDL2=1 -DVIDEO_OPENGLES=0 ../../
           - make
     - step:
         name: Clang build
