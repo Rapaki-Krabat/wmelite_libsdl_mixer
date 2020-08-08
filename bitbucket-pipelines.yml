@@ -1,0 +1,32 @@
+image: hcdaniel/debian10build:latest
+pipelines:
+  default:
+    - step:
+        name: GCC build
+        script:
+          - git submodule init
+          - git submodule update
+          - mkdir -p build/gcc
+          - cd build/gcc
+          - cmake -DCMAKE_TOOLCHAIN_FILE=/toolchain-gcc.cmake -DUSE_LOCAL_SDL2=1 ../../
+          - make
+    - step:
+        name: MinGW64 build
+        script:
+          - git submodule init
+          - git submodule update
+          - mkdir -p build/mingw64/
+          - cd build/mingw64/
+          - cmake -DCMAKE_TOOLCHAIN_FILE=/toolchain-mingw64.cmake -DUSE_LOCAL_SDL2=1 ../../
+          - make
+    - step:
+        name: Clang build
+        script:
+          - git submodule init
+          - git submodule update
+          - mkdir -p build/mingw64/
+          - cd build/mingw64/
+          - cmake -DCMAKE_TOOLCHAIN_FILE=/toolchain-clang.cmake -DUSE_LOCAL_SDL2=1 ../../
+          - make
+
+
