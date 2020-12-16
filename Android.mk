@@ -157,7 +157,7 @@ endif
 
 LOCAL_EXPORT_C_INCLUDES += $(LOCAL_C_INCLUDES)
 
-LOCAL_CFLAGS += -Wall -Wextra -Wcast-align -Wno-unused-label -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-sign-compare -Wno-main -Wno-parentheses -Wno-switch -Wno-array-bounds -Wno-narrowing -Wno-maybe-uninitialized -Wno-format -Wno-write-strings -Wno-unused-value
+LOCAL_CFLAGS += -Wall -Wextra -Wno-unused-label -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-sign-compare -Wno-main -Wno-parentheses -Wno-switch -Wno-array-bounds -Wno-narrowing -Wno-maybe-uninitialized -Wno-format -Wno-write-strings -Wno-unused-value
 
 LOCAL_LDLIBS := -llog
 
